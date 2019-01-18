@@ -630,6 +630,7 @@ public class MetaInjectMeta extends BaseStepMeta implements StepMetaInterface, S
     List<ResourceReference> references = new ArrayList<ResourceReference>( 5 );
     String realFilename = transMeta.environmentSubstitute( fileName );
     String realTransname = transMeta.environmentSubstitute( transName );
+    String realDirectoryPath = transMeta.environmentSubstitute( directoryPath );
     ResourceReference reference = new ResourceReference( stepInfo );
     references.add( reference );
 
@@ -642,7 +643,8 @@ public class MetaInjectMeta extends BaseStepMeta implements StepMetaInterface, S
       // Add the filename to the references, including a reference to this step
       // meta data.
       //
-      reference.getEntries().add( new ResourceEntry( realTransname, ResourceType.ACTIONFILE ) );
+      String realTransformation = realDirectoryPath + "/" + transName;
+      reference.getEntries().add( new ResourceEntry( realTransformation, ResourceType.ACTIONFILE ) );
     }
     return references;
   }
