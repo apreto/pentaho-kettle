@@ -49,6 +49,7 @@ import org.pentaho.di.core.variables.Variables;
 import org.pentaho.di.repository.Repository;
 import org.pentaho.di.repository.RepositoryDirectoryInterface;
 import org.pentaho.di.resource.ResourceDefinition;
+import org.pentaho.di.resource.ResourceEntry;
 import org.pentaho.di.resource.ResourceNamingInterface;
 import org.pentaho.di.resource.ResourceReference;
 import org.pentaho.di.trans.TransMeta;
@@ -113,6 +114,27 @@ public class MetaInjectMetaTest {
     ResourceReference reference = actualResult.iterator().next();
     assertEquals( 1, reference.getEntries().size() );
   }
+
+  @Test
+  public void getResourceDependencies_repository_full_path() {
+    // checks if get resource dependencies returns transname with the full repository path name
+    TransMeta transMeta = mock( TransMeta.class );
+    StepMeta stepMeta = mock( StepMeta.class );
+    metaInjectMeta.setTransName( "TRANS_NAME" );
+    metaInjectMeta.setDirectoryPath( "/REPOSITORY/DIRECTORY");
+    doReturn( "TRANS_NAME" ).when( transMeta ).environmentSubstitute( "TRANS_NAME" );
+    doReturn( "/REPOSITORY/DIRECTORY" ).when( transMeta ).environmentSubstitute( "/REPOSITORY/DIRECTORY" );
+
+    List<ResourceReference> actualResult = metaInjectMeta.getResourceDependencies( transMeta, stepMeta );
+    assertEquals( 1, actualResult.size() );
+    ResourceReference reference = actualResult.iterator().next();
+    assertEquals( 1, reference.getEntries().size() );
+    ResourceEntry resourceEntry = reference.getEntries().get(0);
+    assertEquals( "/REPOSITORY/DIRECTORY/TRANS_NAME", resourceEntry.getResource());
+    assertEquals(ResourceEntry.ResourceType.ACTIONFILE, resourceEntry.getResourcetype() );
+  }
+
+
 
   @Test
   public void exportResources() throws KettleException {
