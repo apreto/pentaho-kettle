@@ -640,10 +640,8 @@ public class MetaInjectMeta extends BaseStepMeta implements StepMetaInterface, S
       //
       reference.getEntries().add( new ResourceEntry( realFilename, ResourceType.ACTIONFILE ) );
     } else if ( !Utils.isEmpty( realTransname ) ) {
-      // Add the filename to the references, including a reference to this step
-      // meta data.
-      //
-      String realTransformation = realDirectoryPath + "/" + transName;
+      // Add the trans name (including full repository path) to dependencies
+      String realTransformation = realDirectoryPath + "/" + realTransname;
       reference.getEntries().add( new ResourceEntry( realTransformation, ResourceType.ACTIONFILE ) );
     }
     return references;

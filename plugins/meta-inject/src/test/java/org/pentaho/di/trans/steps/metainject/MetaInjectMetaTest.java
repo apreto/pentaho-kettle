@@ -117,20 +117,20 @@ public class MetaInjectMetaTest {
 
   @Test
   public void getResourceDependencies_repository_full_path() {
-    // checks if get resource dependencies returns transname with the full repository path name
+    // checks getResourceDependencies() returns action file resource w/ transname including full repository path name
     TransMeta transMeta = mock( TransMeta.class );
     StepMeta stepMeta = mock( StepMeta.class );
     metaInjectMeta.setTransName( "TRANS_NAME" );
-    metaInjectMeta.setDirectoryPath( "/REPOSITORY/DIRECTORY");
-    doReturn( "TRANS_NAME" ).when( transMeta ).environmentSubstitute( "TRANS_NAME" );
-    doReturn( "/REPOSITORY/DIRECTORY" ).when( transMeta ).environmentSubstitute( "/REPOSITORY/DIRECTORY" );
+    metaInjectMeta.setDirectoryPath( "/REPO/DIR" );
+    doReturn( "TRANS_NAME_SUBS" ).when( transMeta ).environmentSubstitute( "TRANS_NAME" );
+    doReturn( "/REPO/DIR_SUBS" ).when( transMeta ).environmentSubstitute( "/REPO/DIR" );
 
     List<ResourceReference> actualResult = metaInjectMeta.getResourceDependencies( transMeta, stepMeta );
     assertEquals( 1, actualResult.size() );
     ResourceReference reference = actualResult.iterator().next();
     assertEquals( 1, reference.getEntries().size() );
-    ResourceEntry resourceEntry = reference.getEntries().get(0);
-    assertEquals( "/REPOSITORY/DIRECTORY/TRANS_NAME", resourceEntry.getResource());
+    ResourceEntry resourceEntry = reference.getEntries().get( 0 );
+    assertEquals( "/REPO/DIR_SUBS/TRANS_NAME_SUBS", resourceEntry.getResource() );
     assertEquals(ResourceEntry.ResourceType.ACTIONFILE, resourceEntry.getResourcetype() );
   }
 
